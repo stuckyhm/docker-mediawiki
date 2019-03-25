@@ -38,7 +38,7 @@ RUN mkdir /var/run/mysqld \
 	&& chmod 777 /var/run/mysqld
 
 ARG MEDIAWIKI_VERSION=1.32
-ARG MEDIAWIKI_PATCH=0 
+ARG MEDIAWIKI_PATCH=0
 ARG MEDIAWIKI_TARBALL=https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_VERSION}/mediawiki-${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}.tar.gz
 
 RUN cd /var/www \
