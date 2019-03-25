@@ -1,4 +1,23 @@
-ARG BASE_TAG=bionic-20190307
+#!/bin/bash
+
+function getLastGithubTag {
+	JSON=$(curl -s https://api.github.com/repos/${1}/${2}/tags | jq '.[0]')
+
+	MEDIAWIKI_TAG_NAME=$(echo ${JSON} | jq '.name' | sed -e 's/"//g')
+	MEDIAWIKI_VERSION=$(echo ${MEDIAWIKI_TAG_NAME} | cut -d "." -f 1,2)
+	MEDIAWIKI_PATCH=$(echo ${MEDIAWIKI_TAG_NAME} | cut -d "." -f 3)
+	MEDIAWIKI_TARBALL=$(echo ${JSON} | jq '.tarball_url' | sed -e 's/"//g')
+}
+
+function getLastDockerImage {
+	BASE_TAG=$(wget -q https://registry.hub.docker.com/v1/repositories/${1}/tags -O - | sed -e 's/[][]//g' -e 's/"//g' -e 's/ //g' | tr '}' '\n' | awk -F: '{print $3}' | grep ${2} | sort | tail -n 1)
+}
+
+getLastGithubTag wikimedia mediawiki
+getLastDockerImage ubuntu bionic-
+
+cat > Dockerfile <<'EOF'
+ARG BASE_TAG=%BASE_TAG%
   
 FROM ubuntu:${BASE_TAG}
 
@@ -37,8 +56,8 @@ RUN mkdir /var/run/mysqld \
 	&& chown -R mysql:mysql /var/lib/mysql /var/run/mysqld \
 	&& chmod 777 /var/run/mysqld
 
-ARG MEDIAWIKI_VERSION=1.32
-ARG MEDIAWIKI_PATCH=0 
+ARG MEDIAWIKI_VERSION=%MEDIAWIKI_VERSION%
+ARG MEDIAWIKI_PATCH=%MEDIAWIKI_PATCH%
 ARG MEDIAWIKI_TARBALL=https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_VERSION}/mediawiki-${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}.tar.gz
 
 RUN cd /var/www \
@@ -57,3 +76,8 @@ VOLUME /var/www/mediawiki/extensions
 VOLUME /var/www/mediawiki/images
 
 ENTRYPOINT ["/entrypoint.sh"]
+EOF
+
+sed -i '' "s/%BASE_TAG%/${BASE_TAG}/g" Dockerfile
+sed -i '' "s/%MEDIAWIKI_VERSION%/${MEDIAWIKI_VERSION}/g" Dockerfile
+sed -i '' "s/%MEDIAWIKI_PATCH%/${MEDIAWIKI_PATCH}/g" Dockerfile
