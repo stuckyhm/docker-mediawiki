@@ -4,8 +4,8 @@ function getLastGithubTag {
 	JSON=$(curl -s https://api.github.com/repos/${1}/${2}/tags | jq '.[0]')
 
 	MEDIAWIKI_TAG_NAME=$(echo ${JSON} | jq '.name' | sed -e 's/"//g')
-	MEDIAWIKI_VERSION=$(echo ${MEDIAWIKI_TAG_NAME} | cut -d "." -f 1,2)
-	MEDIAWIKI_PATCH=$(echo ${MEDIAWIKI_TAG_NAME} | cut -d "." -f 3)
+	MEDIAWIKI_VERSION=$(echo ${MEDIAWIKI_TAG_NAME} | cut -d "." -f 1,2 | tr -d '[:space:]')
+	MEDIAWIKI_PATCH=$(echo ${MEDIAWIKI_TAG_NAME} | cut -d "." -f 3 | tr -d '[:space:]')
 	MEDIAWIKI_TARBALL=$(echo ${JSON} | jq '.tarball_url' | sed -e 's/"//g')
 }
 
@@ -81,3 +81,17 @@ EOF
 sed -i '' "s/%BASE_TAG%/${BASE_TAG}/g" Dockerfile
 sed -i '' "s/%MEDIAWIKI_VERSION%/${MEDIAWIKI_VERSION}/g" Dockerfile
 sed -i '' "s/%MEDIAWIKI_PATCH%/${MEDIAWIKI_PATCH}/g" Dockerfile
+
+BASE_VERSION=$(echo ${BASE_TAG} | cut -d "-" -f 2)
+TAG1=v${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}
+TAG2=v${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}-${BASE_VERSION}
+
+git add Dockerfile
+git commit -m "Update to ubuntu:${BASE_TAG} and Mediawiki ${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}"
+
+git tag -d ${TAG1}
+git push origin :refs/tags/${TAG1}
+git tag -af ${TAG1} -m "Update to ubuntu:${BASE_TAG} and Mediawiki ${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}"
+git tag -a ${TAG2} -m "Update to ubuntu:${BASE_TAG} and Mediawiki ${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}"
+git push
+git push --tags
