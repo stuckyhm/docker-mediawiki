@@ -4,8 +4,8 @@ function getLastGithubTag {
 	JSON=$(curl -s https://api.github.com/repos/${1}/${2}/tags | jq '.[0]')
 
 	MEDIAWIKI_TAG_NAME=$(echo ${JSON} | jq '.name' | sed -e 's/"//g')
-	MEDIAWIKI_VERSION=$(echo ${MEDIAWIKI_TAG_NAME} | cut -d "." -f 1,2 | tr -d '[:space:]')
-	MEDIAWIKI_PATCH=$(echo ${MEDIAWIKI_TAG_NAME} | cut -d "." -f 3 | tr -d '[:space:]')
+	MEDIAWIKI_VERSION=$(echo ${MEDIAWIKI_TAG_NAME} | cut -d "." -f 1,2)
+	MEDIAWIKI_PATCH=$(echo ${MEDIAWIKI_TAG_NAME} | cut -d "." -f 3)
 	MEDIAWIKI_TARBALL=$(echo ${JSON} | jq '.tarball_url' | sed -e 's/"//g')
 }
 
@@ -78,9 +78,9 @@ VOLUME /var/www/mediawiki/images
 ENTRYPOINT ["/entrypoint.sh"]
 EOF
 
-sed -i '' "s/%BASE_TAG%/${BASE_TAG}/g" Dockerfile
-sed -i '' "s/%MEDIAWIKI_VERSION%/${MEDIAWIKI_VERSION}/g" Dockerfile
-sed -i '' "s/%MEDIAWIKI_PATCH%/${MEDIAWIKI_PATCH}/g" Dockerfile
+sed -i '' -e "s/%BASE_TAG%/${BASE_TAG}/g" Dockerfile
+sed -i '' -e "s/%MEDIAWIKI_VERSION%/${MEDIAWIKI_VERSION}/g" Dockerfile
+sed -i '' -e "s/%MEDIAWIKI_PATCH%/${MEDIAWIKI_PATCH}/g" Dockerfile
 
 BASE_VERSION=$(echo ${BASE_TAG} | cut -d "-" -f 2)
 TAGS="v${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH} v${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}-${BASE_VERSION}"
