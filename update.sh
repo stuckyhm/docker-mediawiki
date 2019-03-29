@@ -83,15 +83,18 @@ sed -i '' "s/%MEDIAWIKI_VERSION%/${MEDIAWIKI_VERSION}/g" Dockerfile
 sed -i '' "s/%MEDIAWIKI_PATCH%/${MEDIAWIKI_PATCH}/g" Dockerfile
 
 BASE_VERSION=$(echo ${BASE_TAG} | cut -d "-" -f 2)
-TAG1=v${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}
-TAG2=v${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}-${BASE_VERSION}
+TAGS="v${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH} v${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}-${BASE_VERSION}"
+
+TEXT="Update to ubuntu:${BASE_TAG} and Mediawiki ${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}"
 
 git add Dockerfile
-git commit -m "Update to ubuntu:${BASE_TAG} and Mediawiki ${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}"
+git commit -m "${TEXT}"
 
-git tag -d ${TAG1}
-git push origin :refs/tags/${TAG1}
-git tag -af ${TAG1} -m "Update to ubuntu:${BASE_TAG} and Mediawiki ${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}"
-git tag -a ${TAG2} -m "Update to ubuntu:${BASE_TAG} and Mediawiki ${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}"
+for TAG in ${TAGS}; do
+	git tag -d "${TAG}"
+	git push origin :refs/tags/"${TAG}"
+	git tag -af "${TAG}" -m "${TEXT}"
+done
+
 git push
 git push --tags
