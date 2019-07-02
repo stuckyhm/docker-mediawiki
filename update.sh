@@ -40,9 +40,6 @@ function replateTag {
 
 while getopts "ct" opt; do
   case $opt in
-    c)
-      COMMIT=1
-      ;;
     t)
       TAGGING=1
       ;;
@@ -63,10 +60,12 @@ BASE_VERSION=$(echo ${BASE_TAG} | cut -d "-" -f 2)
 
 if [[ ${BASE_CHANGE} -eq 1 ]]; then
 	TEXT="base image to ubuntu:${BASE_TAG}"
+	GIT=1
 fi
 if [[ ${VERSION_CHANGE} -eq 1 ]] || [[ ${PATCH_CHANGE} -eq 1 ]]; then
 	[[ "${TEXT}" != "" ]] && TEXT="${TEXT} and "
 	TEXT="${TEXT}mediawiki to ${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}"
+	GIT=1
 fi
 TEXT="Update ${TEXT}."
 
@@ -77,11 +76,11 @@ if [[ ${GIT} -eq 1 ]]; then
 	git commit -m "${TEXT}"
 
 	git push
-fi
 
-if [[ ${TAGGING} -eq 1 ]]; then
-	replateTag "v${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}" "${TEXT}"
-	replateTag "v${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}-${BASE_VERSION}" "${TEXT}"
+	if [[ ${TAGGING} -eq 1 ]]; then
+		replateTag "v${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}" "${TEXT}"
+		replateTag "v${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}-${BASE_VERSION}" "${TEXT}"
 
-	git push --tags
+		git push --tags
+	fi
 fi
