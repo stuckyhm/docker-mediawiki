@@ -6,7 +6,7 @@ function getLastGithubTag {
 
 	MEDIAWIKI_TAG_NAME=$(echo ${JSON} | jq '.name' | sed -e 's/"//g')
 	MEDIAWIKI_VERSION=$(echo ${MEDIAWIKI_TAG_NAME} | cut -d "." -f 1,2)
-	MEDIAWIKI_PATCH=$(echo ${MEDIAWIKI_TAG_NAME} | cut -d "." -f 3)
+	MEDIAWIKI_PATCH=$(echo ${MEDIAWIKI_TAG_NAME} | cut -d "." -f 3-)
 
 	[[ "${MEDIAWIKI_TAG_NAME}" = "" ]] && echo "No mediawiki version tag found." && exit 1
 }
