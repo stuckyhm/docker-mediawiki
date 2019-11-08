@@ -1,11 +1,11 @@
-ARG BASE_TAG=bionic-20191010
+ARG BASE_TAG=bionic-20191029
 
 FROM ubuntu:${BASE_TAG}
 
 MAINTAINER Sebastian Stuckenbrock sstuckenbrock@efhm.de
 
 ARG MEDIAWIKI_VERSION=1.34
-ARG MEDIAWIKI_PATCH=0-rc.0
+ARG MEDIAWIKI_PATCH=0-rc.1
 ARG MEDIAWIKI_TARBALL=https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_VERSION}/mediawiki-${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}.tar.gz
 
 # Build-time metadata as defined at http://label-schema.org
