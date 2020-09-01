@@ -1,4 +1,5 @@
 #!/bin/sh
+set -ex
 
 for TAG in $(git tag -l --points-at HEAD); do
 	docker tag ${IMAGE_NAME} ${DOCKER_REPO}:${TAG}
