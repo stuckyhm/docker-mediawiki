@@ -1,4 +1,4 @@
-ARG BASE_TAG=bionic-20200921
+ARG BASE_TAG=bionic-20201119
 
 FROM ubuntu:${BASE_TAG}
 
