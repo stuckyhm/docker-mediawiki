@@ -4,8 +4,8 @@ FROM ubuntu:${BASE_TAG}
 
 MAINTAINER Sebastian Stuckenbrock sstuckenbrock@efhm.de
 
-ARG MEDIAWIKI_VERSION=1.35
-ARG MEDIAWIKI_PATCH=2
+ARG MEDIAWIKI_VERSION=1.36
+ARG MEDIAWIKI_PATCH=0-rc.0
 ARG MEDIAWIKI_TARBALL=https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_VERSION}/mediawiki-${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}.tar.gz
 
 # Build-time metadata as defined at http://label-schema.org
