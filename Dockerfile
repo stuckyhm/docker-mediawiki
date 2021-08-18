@@ -4,8 +4,8 @@ FROM ubuntu:${BASE_TAG}
 
 MAINTAINER Sebastian Stuckenbrock sstuckenbrock@efhm.de
 
-ARG MEDIAWIKI_VERSION=wmf-1.36
-ARG MEDIAWIKI_PATCH=0-wmf.31-testing
+ARG MEDIAWIKI_VERSION=1.36
+ARG MEDIAWIKI_PATCH=1
 ARG MEDIAWIKI_TARBALL=https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_VERSION}/mediawiki-${MEDIAWIKI_VERSION}.${MEDIAWIKI_PATCH}.tar.gz
 
 # Build-time metadata as defined at http://label-schema.org
