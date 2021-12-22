@@ -27,12 +27,16 @@ RUN echo 'deb http://ppa.launchpad.net/ondrej/php/ubuntu bionic main' > /etc/apt
 		php7.3-xml \
 		php7.3-apcu \
 		php7.3-mbstring \
-		composer \
 		imagemagick \
 		libgd3 \
 		git \
 		pwgen \
-		mysql-server
+		mysql-server \
+	&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+	&& php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+	&& php -v \
+	&& rm composer-setup.php
+RUN php -v && date
 
 RUN sed -i 's|DocumentRoot /var/www/html| DocumentRoot /var/www/mediawiki|g' /etc/apache2/sites-available/000-default.conf
 
@@ -47,7 +51,7 @@ RUN cd /var/www \
 	&& wget -O mediawiki-${MEDIAWIKI_VERSION}.tar.gz ${MEDIAWIKI_TARBALL} \
 	&& tar -xf mediawiki-${MEDIAWIKI_VERSION}.tar.gz && rm *.tar.gz \
 	&& mv mediawiki-* mediawiki
-
+RUN php -v && date
 ADD supervisord.conf /etc/supervisor/conf.d/mediawiki.conf
 ADD entrypoint.sh /entrypoint.sh
 
