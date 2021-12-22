@@ -11,22 +11,22 @@ ARG MEDIAWIKI_VERSION_PATCH=1 
 ARG MEDIAWIKI_TARBALL=https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_VERSION_MAJOR}.${MEDIAWIKI_VERSION_MINOR}/mediawiki-${MEDIAWIKI_VERSION}.tar.gz
 
 RUN apt-get update \
-	&& DEBIAN_FRONTEND=noninteractive apt-get -y install apt-transport-https apt-utils curl gpg
+	&& DEBIAN_FRONTEND=noninteractive apt-get -y install apt-transport-https apt-utils curl gpg software-properties-common
 
-RUN echo 'deb http://packages.dotdeb.org jessie all' > /etc/apt/sources.list.d/dotdeb.list \
-	&& curl http://www.dotdeb.org/dotdeb.gpg | apt-key add - \
+RUN echo 'deb http://ppa.launchpad.net/ondrej/php/ubuntu bionic main' > /etc/apt/sources.list.d/dotdeb.list \
+	&& add-apt-repository ppa:ondrej/php \
 	&& apt-get update \
 	&& DEBIAN_FRONTEND=noninteractive apt-get -y install \
 		wget \
 		supervisor \
-		libapache2-mod-php7.2 \
-		php7.2 \
-		php7.2-gd \
-		php7.2-intl \
-		php7.2-mysql \
-		php7.2-xml \
-		php7.2-apcu \
-		php7.2-mbstring \
+		libapache2-mod-php7.3 \
+		php7.3 \
+		php7.3-gd \
+		php7.3-intl \
+		php7.3-mysql \
+		php7.3-xml \
+		php7.3-apcu \
+		php7.3-mbstring \
 		composer \
 		imagemagick \
 		libgd3 \
