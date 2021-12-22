@@ -31,7 +31,7 @@ VOLUME /etc/mysql/conf.d
 VOLUME /var/www/mediawiki/extensions
 VOLUME /var/www/mediawiki/images
 
-#ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE
