@@ -17,7 +17,7 @@ function getLastDockerImageTag {
 		tr '}' '\n' | \
 		awk -F: '{print $3}' | \
 		grep ${2} | \
-		sort | \
+		sort -V | \
 		tail -n 1)
 
 	[[ "${VALUE}" = "" ]] && echo "No version tag for '${1}:${2}*' found." && exit 1
@@ -108,9 +108,7 @@ function updateApplicationVersion {
 	replaceInDockerfileIfChanged "ARG ${APPLICATION_KEY}_VERSION_PATCH=" ${APPLICATION_VERSION_PATCH}
 }
 
-
-updateDockerfileBaseImage ubuntu bionic-
-updateApplicationVersion wikimedia mediawiki MEDIAWIKI
+updateDockerfileBaseImage mediawiki "^[0-9]*\.[0-9]*\.[0-9]*$"
 
 echo ${COMMIT_TEXT}
 
