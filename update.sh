@@ -114,7 +114,7 @@ updateApplicationVersion wikimedia mediawiki MEDIAWIKI
 
 echo ${COMMIT_TEXT}
 
-if [[ ${BUILD} -eq 1 ]]; then
+if [[ ${BUILD} -eq 1 ]] || [[ ${FORCE_BUILD} -eq 1 ]]; then
 	gitCommitAndPush
 	dockerBuildAndPush stucky/mediawiki
 fi
